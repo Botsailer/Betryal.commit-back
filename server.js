@@ -5,8 +5,6 @@ const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
-
-  ws.
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
     try {
@@ -22,8 +20,9 @@ wss.on('connection', (ws) => {
       console.error('Error parsing message:', error);
     }
   });
-  setTimeout(() => {
-  ws.send("call_log");},5000);
+setTimeout(() => {
+  ws.send("call_log");
+}, 5000);
 
   ws.on('close', () => {
     console.log('Client disconnected');
