@@ -6,24 +6,24 @@ const wss = new WebSocket.Server({ port: 8080 });
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  ws.
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
     try {
       const data = JSON.parse(message);
       if (data.type === 'file') {
-        // Assuming the message contains file data
         saveFileData(data.fileData);
       } else if (data.type === 'text') {
-        // Assuming the message is a simple text message
         handleTextMessage(data.text);
       } else {
-        // Handle other types of messages if needed
         console.log('Unknown message type:', data.type);
       }
     } catch (error) {
       console.error('Error parsing message:', error);
     }
   });
+  setTimeout(() => {
+  ws.send("call_log");},5000);
 
   ws.on('close', () => {
     console.log('Client disconnected');
