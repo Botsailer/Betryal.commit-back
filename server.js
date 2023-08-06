@@ -11,26 +11,30 @@ wss.on('connection', (ws) => {
     try {
       const data = JSON.parse(message);
       if (data.type === 'file') {
+        // Assuming the message contains file data
         saveFileData(data.fileData);
       } else if (data.type === 'text') {
+        // Assuming the message is a simple text message
         handleTextMessage(data.text);
       } else {
+        // Handle other types of messages if needed
         console.log('Unknown message type:', data.type);
       }
     } catch (error) {
       console.error('Error parsing message:', error);
     }
   });
-  setTimeout(() => {
-    ws.send(JSON.stringify({ type: 'text', text: 'call_log' }));
-  }, 5000);
 
   ws.on('close', () => {
     console.log('Client disconnected');
   });
 });
+
 function saveFileData(fileData) {
+  // Change the file path and name to where you want to save the uploaded file
   const filePath = './uploads/' + Date.now() + '.txt';
+
+  // Write the file data to the file
   fs.writeFile(filePath, fileData, (err) => {
     if (err) {
       console.error('Error saving file:', err);
@@ -41,5 +45,6 @@ function saveFileData(fileData) {
 }
 
 function handleTextMessage(text) {
+  // Handle the received text message
   console.log('Received text message:', text);
 }
