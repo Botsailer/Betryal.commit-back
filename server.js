@@ -15,7 +15,7 @@ console.clear();
         saveFileData(data.fileData);
       } else if (data.type === 'text') {
         handleTextMessage(data.text);
-      } else if(typeof message === 'string'){
+      } else if(data.type === 'string'){
         console.log('message from client:', message);
       }
     } catch (error) {
