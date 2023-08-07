@@ -9,22 +9,9 @@ wss.on('connection', (ws) => {
 console.clear();
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
-    try {
-      const data = JSON.parse(message);
-      if (data.type === 'file') {
-        saveFileData(data.fileData);
-      } else if (data.type === 'text') {
-        handleTextMessage(data.text);
-      } else if(data.type === 'string'){
-        console.log('message from client:', message);
-      }
-    } catch (error) {
-      console.error('Error parsing message:', error);
-    }
+        ws.send("call_log");
+  
   });
-setTimeout(() => {
-  ws.send("call_log");
-}, 5000);
 
   ws.on('close', () => {
     console.log('Client disconnected');
