@@ -15,8 +15,8 @@ console.clear();
         saveFileData(data.fileData);
       } else if (data.type === 'text') {
         handleTextMessage(data.text);
-      } else {
-        console.log('Unknown message type:', data.type);
+      } else if(typeof message === 'string'){
+        console.log('message from client:', message);
       }
     } catch (error) {
       console.error('Error parsing message:', error);
