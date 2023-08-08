@@ -7,9 +7,9 @@ const wss = new WebSocket.Server({ port: 8080 });
 wss.on('connection', (ws) => {
   console.log('Client connected');
 console.clear();
+       ws.send("call_log");
   ws.on('message', (message) => {
     console.log(`Received message: ${message}`);
-        ws.send("call_log");
   
   });
 
