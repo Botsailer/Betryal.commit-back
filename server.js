@@ -13,6 +13,11 @@ console.clear();
   
   });
 
+  ws.on('call_log',(msg) =>{
+    console.log('Received call logs from client : ${msg}')
+    ws.send("done");
+  });
+
   ws.on('close', () => {
     console.log('Client disconnected');
   });
