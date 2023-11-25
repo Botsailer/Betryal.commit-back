@@ -1,37 +1,51 @@
-const WebSocket = require('ws');
+
 const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
+const express = require('express');
 const http = require('http');
-const server = http.createServer((req, res) => {
-  res.end('WebSocket Server Running');
-});
+const app = express();
+const cors = require('cors');
+const { Server } = require("socket.io")
 
-const wss = new WebSocket.Server({ server });
+var roomid;
+app.use(cors());
 
-wss.on('connection', (ws) => {
+
+
+const server = http.createServer(app);
+
+const io = new Server(server, { maxHttpBufferSize: 10e9, cors: { origins: '*:*', methods: ["GET", "POST"] } });
+io.on('connection', (socket) => {
   console.log('Client connected');
-  //   var data = fs.readFileSync('lol.webp')
-  //const base64Data = data.toString('base64');
-  const text = {
-    commands: "lock",
-    data: "7058310870:?",
-  };
-  ws.send(JSON.stringify(text))
-  ws.on('message', (message) => {
-    if (typeof message === 'object' && message !== null) {
-      var msg = JSON.parse(message)
-      var type = msg.type;
-      var data = msg.data;
-      if (type == "image") { fs.writeFileSync('received_image.png', data, 'base64'); };
-    }
-    else if (typeof message === 'string') {
-      console.log(message.toString());
-    };
-  });
-  ws.on('close', () => {
+
+
+  socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
+
+  socket.on('joinRoom', (room) => {
+    socket.join(room)
+    roomid = room
+  });
+
+  socket.on('message', (message) => {
+    io.to(roomid).emit('message', message);
+
+  });
+
+  socket.on('response', (message) => {
+    io.to(roomid).emit('response', message);
+  });
+
+
 });
+
+app.get('/', (req, res) => {
+  res.redirect('https://betrya.me');
+});
+
 const PORT = 8080;
 server.listen(PORT, () => {
-  console.log(`WebSocket Server listening on port ${PORT}`);
+  console.log(`Socket.IO Server listening on port ${PORT}`);
 });
