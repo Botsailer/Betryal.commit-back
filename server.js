@@ -1,7 +1,5 @@
 
-const fs = require('fs');
-const multer = require('multer');
-const path = require('path');
+
 const express = require('express');
 const http = require('http');
 const app = express();
